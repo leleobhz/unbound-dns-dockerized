@@ -1,7 +1,7 @@
 Unbound
 ---------
 
-##About
+## About
 
 Unbound: a validating, recursive, and caching DNS resolver that supports DNSSEC
 This docker aim to simplify setup for unbound for following use cases:
@@ -16,53 +16,26 @@ This docker aim to simplify setup for unbound for following use cases:
 
 Pull image
 
-    docker pull sahilsk/unbound
+    docker pull pqatsi/unbound-recursive
 
 Run it:
 
-    docker run -it --rm -p 53:53 -p 53:53/udp sahilsk/unbound
+    docker run -it --rm -p 53:53 -p 53:53/udp pqatsi/unbound-recursive
 
 With Verbosity:
 
     docker run -it --rm -p 53:53 -p 53:53/udp \
-                  sahilsk/unbound unbound -d -vv
+                  pqatsi/unbound-recursive unbound -d -vv
 
 Run with block_ads list and one thread:
 
     docker run -it --rm -p 53:53 -p 53:53/udp \
                   -e "BLOCK_ADS=yes"  \
                   -e "NUM_THREADS=1" \
-                  sahilsk/unbound
+                  pqatsi/unbound-recursive
 
 
 ## Configuration
-
-
-- **root.hints**: 
-
-    It is the file which contains the listing of primary root DNS servers. Unbound does have a listing of root DNS servers in its code.
-It should be updated every 6 month or so.
-
-To query a hostname Unbound has to start at the top at the root DNS servers and work its way down to the authoritative servers (see the definition of a resolving DNS server above). Download a copy of the root hints from Internic and place it in the /var/unbound/etc/root.hints file. This file will be called by the root-hints: directive in the unbound.conf file.
-
-    curl ftp://ftp.internic.net/domain/named.cache -o root.hints 
-
-Store this file as `/var/unbound/etc/root/hints`
-
-To update before running set environment variable:
- 
-    UPDATE_ROOT_DNS_SERVERS="yes"` 
-
-
--  **auto-trust-anchor-file**
-
-It contains the key for the root server so DNSSEC can be validated. We need to tell Unbound that we trust the root server so it can start to develop a chain of trust down to the hostname we want resolved and validated using DNSSEC.
-
-You can independently verify the root zone anchor by going to the IANA.org Index of /root-anchors.
-
-    . IN DS 19036 8 2 49AAC11D7B6F6446702E54A1607371607A1A41855200FD2CE1CDDE32F24E8FB5
-
-Store it as`/var/unbound/etc/root.key`
 
 ## Dnsspoof with yoyo.org/benstasker.co.uk, anti-advertising list
 
@@ -76,8 +49,6 @@ Following script will fetch new add server list and put it in unbound directory,
 followed by unbount reload, if unbound running as server
 
     block_ads_server.sh
-
-
 
 ## Optimization
 
