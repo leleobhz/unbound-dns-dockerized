@@ -15,7 +15,7 @@ fi
 
 echo "Fetching ads server list..."
 
-if [ -z "$BLOCK_SERVER_PROVIDER"]
+if [ -z "$BLOCK_SERVER_PROVIDER" ]
 then
   BLOCK_SERVER_PROVIDER="yoyo"
 fi

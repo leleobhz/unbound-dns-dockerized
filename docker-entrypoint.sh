@@ -3,12 +3,10 @@
 
 SCRIPT_DIR="/var/unbound/scripts"
 
-cd /var/unbound/etc 
+cd /etc/unbound
 
-if [ "$UPDATE_ROOT_DNS_SERVERS" = "yes" ]
-then
-    curl ftp://ftp.internic.net/domain/named.cache -o /var/unbound/etc/root.hints
-fi
+/etc/periodic/monthly/update-unbound-root-hints
+unbound-anchor -a "/etc/unbound/root.key"
 
 ## Block Ads
 if [ "$BLOCK_ADS" = "yes" ]
@@ -38,8 +36,13 @@ else
 fi
 
 ## Sync clocks,else you'll get  "Fix failed to prime trust anchor" errors
-echo "Syncing clock with 130.206.3.166"
-ntpd -n -q -N -p 130.206.3.166
+## Host must set this, so commenting
+#echo "Syncing clock with pool.ntp.org"
+#ntpd -n -N -p pool.ntp.org
+
+## Checkconf
+
+unbound-checkconf || exit 1
 
 ## Start unbound if no args given
 if [ "$#" -gt 0 ]
